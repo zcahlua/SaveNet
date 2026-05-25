@@ -108,10 +108,13 @@ Or manually:
 pip install moleculex==0.0.3
 ```
 
-### Step 3: Download Molecule3D raw data
+## Download Molecule3D
 
-Download the official Molecule3D raw data from the Google Drive link in the MoleculeX README.
-Place files here:
+The official Molecule3D raw dataset is hosted in the MoleculeX Google Drive folder:
+
+https://drive.google.com/drive/u/2/folders/1y-EyoDYMvWZwClc2uvXrM4_hQBtM85BI?usp=sharing
+
+Download all raw files from that folder and place them under:
 
 ```text
 /path/to/Molecule3D/
@@ -126,6 +129,18 @@ Place files here:
       combined_mols_1000000_to_2000000.sdf
       combined_mols_2000000_to_3000000.sdf
       combined_mols_3000000_to_3899647.sdf
+```
+
+Then install MoleculeX / `molx`:
+
+```bash
+pip install moleculex==0.0.3
+```
+
+The pip package name is `moleculex`, but the Python import used by this repo is:
+
+```python
+from molx.dataset import Molecule3DProps
 ```
 
 ### Step 4: Preprocess Molecule3D

@@ -5,6 +5,8 @@ import argparse
 from pathlib import Path
 
 
+DATASET_URL = "https://drive.google.com/drive/u/2/folders/1y-EyoDYMvWZwClc2uvXrM4_hQBtM85BI?usp=sharing"
+
 RAW_FILES = [
     "properties.csv",
     "random_split_inds.json",
@@ -26,8 +28,10 @@ def check_raw_files(data_root: Path) -> None:
         msg = [
             f"Missing Molecule3D raw files in: {raw_dir}",
             "",
-            "Download Molecule3D raw data from the official Google Drive link in the MoleculeX README,",
-            "then place the files under:",
+            "Download the official Molecule3D raw data from:",
+            f"  {DATASET_URL}",
+            "",
+            "Then place the files under:",
             f"  {raw_dir}",
             "",
             "Missing files:",
