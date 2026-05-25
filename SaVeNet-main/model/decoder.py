@@ -74,11 +74,11 @@ class Decoder(nn.Module):
         else:
             yi = self.output_network(inputs)
 
-        yi = self.standardize(yi)
         if self.atom_references is not None:
             yi = yi + self.atom_references(atoms)
         if self.aggregation_function is not None:
             yi = torch_scatter.scatter(yi, inputs.batch, dim=0, reduce=self.aggregation_function)
+        yi = self.standardize(yi)
 
         result[self.property_name] = yi
         return result

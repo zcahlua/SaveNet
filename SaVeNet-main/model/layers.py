@@ -82,12 +82,17 @@ def dist_dir(pos: Tensor, edge_index: Tensor):
     return distance, dist_vec_norm
 
 
-def get_geometry(batch, cutoff=5.0):
+def get_geometry(batch, cutoff=5.0, force_radius_graph: bool = False):
     pos = batch.pos.float()
     batch.pos = pos
     batch_idx = batch.batch if hasattr(batch, "batch") and batch.batch is not None else torch.zeros(pos.size(0), dtype=torch.long, device=pos.device)
 
-    if not hasattr(batch, "edge_index") or batch.edge_index is None:
+    if force_radius_graph:
+        if hasattr(batch, "edge_index") and batch.edge_index is not None:
+            batch.bond_edge_index = batch.edge_index
+        edge_index = radius_graph(pos, r=cutoff, loop=False, batch=batch_idx)
+        batch.edge_index = edge_index
+    elif not hasattr(batch, "edge_index") or batch.edge_index is None:
         edge_index = radius_graph(pos, r=cutoff, loop=False, batch=batch_idx)
         batch.edge_index = edge_index
     else:
@@ -216,7 +221,8 @@ class Dense(nn.Linear):
         # Initialize activation function
         if inspect.isclass(activation):
             self.activation = activation()
-        self.activation = activation
+        else:
+            self.activation = activation
 
         if norm == "layer":
             self.norm = nn.LayerNorm(out_features)

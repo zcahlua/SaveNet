@@ -2,7 +2,6 @@ from functools import partial
 
 import torch
 import torch.nn as nn
-from pytorch_lightning import seed_everything
 from torch.nn import Parameter
 from torch_scatter import scatter
 
@@ -29,7 +28,6 @@ class SaVeNet(nn.Module):
         **kwargs,
     ):
         super().__init__()
-        seed_everything(42, workers=True)
         self.eps = 1e-8
         self.hidden_dim = hidden_dim
         self.num_encoder = num_encoder
@@ -131,6 +129,6 @@ class SaVeNetWrapper(nn.Module):
         )
 
     def forward(self, batch):
-        get_geometry(batch, cutoff=self.cutoff)
+        get_geometry(batch, cutoff=self.cutoff, force_radius_graph=True)
         encoded = self.encoder(batch)
         return self.decoder(encoded)

@@ -2,7 +2,6 @@ import logging
 import math
 
 import torch
-from ase.data import atomic_masses
 
 from .layers import BesselBasis, GaussianRBF, get_weight_init_by_string, str2act
 
@@ -12,6 +11,8 @@ def get_logger(name: str) -> logging.Logger:
 
 
 def get_center_of_mass_torch(atomic_numbers, positions):
+    from ase.data import atomic_masses
+
     torch_masses = torch.tensor(
         atomic_masses, device=atomic_numbers.device, dtype=torch.float32
     )
@@ -20,13 +21,13 @@ def get_center_of_mass_torch(atomic_numbers, positions):
 
 
 def recover(merged, vector_dim):
-    vector = torch.reshape(merged[..., -3 * vector_dim:], merged.shape[:-1] + (vector_dim, 3))
+    vector = torch.reshape(merged[..., -3 * vector_dim:], merged.shape[:-1] + (3, vector_dim))
     scalar = merged[..., : -3 * vector_dim]
     return scalar, vector
 
 
 def flatten(scalar, vector):
-    flat_vector = torch.reshape(vector, vector.shape[:-2] + (3 * vector.shape[-2],))
+    flat_vector = torch.reshape(vector, vector.shape[:-2] + (vector.shape[-2] * vector.shape[-1],))
     return torch.cat([scalar, flat_vector], -1)
 
 
