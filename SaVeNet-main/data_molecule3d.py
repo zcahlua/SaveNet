@@ -37,7 +37,12 @@ class Molecule3DToSaVeNet:
         data.z = z.long()
 
         if hasattr(data, "props") and data.props is not None:
-            y = data.props[self.target_id]
+            props = data.props.view(-1)
+            if self.target_id >= props.numel():
+                raise ValueError(
+                    f"target_id={self.target_id} out of range for props with {props.numel()} entries."
+                )
+            y = props[self.target_id]
         elif hasattr(data, "y") and data.y is not None:
             y = data.y
         else:
@@ -53,7 +58,7 @@ def _subset(dataset, size: Optional[int]):
     return dataset[:size]
 
 
-def load_molecule3d_datasets(root: str, target_id: int = 5, split_mode: str = "random", center_positions: bool = False,
+def load_molecule3d_datasets(root: str, target_id: int = 5, split_mode: str = "random", center_positions: bool = True,
                              process_dir_base: str = "processed_downstream", subset_train: Optional[int] = None,
                              subset_val: Optional[int] = None, subset_test: Optional[int] = None) -> Tuple[object, object, object]:
     try:
