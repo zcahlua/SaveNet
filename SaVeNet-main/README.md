@@ -14,6 +14,7 @@ Install Python packages compatible with your local PyTorch/CUDA setup:
 - numpy
 - tqdm
 - moleculex / molx (for `Molecule3DProps`)
+- ase
 
 > Note: PyG extension wheels (`torch-scatter`, `torch-cluster`, `torch-sparse`) must match your torch/CUDA version.
 
@@ -61,6 +62,7 @@ python train_molecule3d.py \
   --subset-train 256 \
   --subset-val 64 \
   --subset-test 64 \
+  --no-center-positions \
   --device cuda
 ```
 

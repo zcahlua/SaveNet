@@ -10,7 +10,7 @@ from typing import Optional, Tuple
 
 
 class Molecule3DToSaVeNet:
-    def __init__(self, target_id: int = 5, center_positions: bool = False):
+    def __init__(self, target_id: int = 5, center_positions: bool = True):
         self.target_id = target_id
         self.center_positions = center_positions
 
@@ -36,10 +36,10 @@ class Molecule3DToSaVeNet:
             raise ValueError("Molecule3D sample has neither z nor x from which z can be recovered.")
         data.z = z.long()
 
-        if hasattr(data, "y") and data.y is not None:
-            y = data.y
-        elif hasattr(data, "props") and data.props is not None:
+        if hasattr(data, "props") and data.props is not None:
             y = data.props[self.target_id]
+        elif hasattr(data, "y") and data.y is not None:
+            y = data.y
         else:
             raise ValueError("Molecule3D sample has neither y nor props target vector.")
 
@@ -59,7 +59,7 @@ def load_molecule3d_datasets(root: str, target_id: int = 5, split_mode: str = "r
     try:
         from molx.dataset import Molecule3DProps
     except ImportError as exc:
-        raise ImportError("Install MoleculeX / molx or provide processed Molecule3D PyG files.") from exc
+        raise ImportError("Install MoleculeX / molx; direct processed-file loading is not implemented yet.") from exc
 
     transform = Molecule3DToSaVeNet(target_id=target_id, center_positions=center_positions)
     train_dataset = Molecule3DProps(root=root, split="train", split_mode=split_mode, transform=transform, process_dir_base=process_dir_base)
