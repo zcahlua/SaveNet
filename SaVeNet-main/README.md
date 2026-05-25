@@ -46,41 +46,7 @@ Expected layout:
 - 5: HOMO-LUMO Gap (default)
 - 6: SCF Energy
 
-## Tests
-```bash
-python -m pytest tests -q
-```
-
-## Smoke train run
-```bash
-python train_molecule3d.py \
-  --data-root /path/to/Molecule3D \
-  --target-id 5 \
-  --split-mode random \
-  --epochs 1 \
-  --batch-size 8 \
-  --subset-train 256 \
-  --subset-val 64 \
-  --subset-test 64 \
-  --device cuda
-```
-
-## Full training
-```bash
-python train_molecule3d.py \
-  --data-root /path/to/Molecule3D \
-  --target-id 5 \
-  --split-mode random \
-  --epochs 100 \
-  --batch-size 32 \
-  --hidden-dim 128 \
-  --num-encoder 8 \
-  --num-rbf 32 \
-  --cutoff 5.0 \
-  --out-dir runs/molecule3d_savenet_gap
-```
-
-## Install MoleculeX / molx and prepare Molecule3D
+## Molecule3D workflow
 
 This project uses the MoleculeX dataset class:
 
@@ -95,20 +61,14 @@ The pip package name is `moleculex`, but the import name is `molx`.
 Install `torch`, `torch-geometric`, `torch-scatter`, `torch-cluster`, and `torch-sparse`
 using wheels compatible with your CUDA/Torch version.
 
-### Step 2: Install MoleculeX
+### Step 2: Install MoleculeX / molx
 
 ```bash
 cd SaVeNet-main
 bash scripts/install_moleculex.sh
 ```
 
-Or manually:
-
-```bash
-pip install moleculex==0.0.3
-```
-
-## Download Molecule3D
+### Step 3: Download Molecule3D
 
 The official Molecule3D raw dataset is hosted in the MoleculeX Google Drive folder:
 
@@ -131,18 +91,6 @@ Download all raw files from that folder and place them under:
       combined_mols_3000000_to_3899647.sdf
 ```
 
-Then install MoleculeX / `molx`:
-
-```bash
-pip install moleculex==0.0.3
-```
-
-The pip package name is `moleculex`, but the Python import used by this repo is:
-
-```python
-from molx.dataset import Molecule3DProps
-```
-
 ### Step 4: Preprocess Molecule3D
 
 ```bash
@@ -161,8 +109,12 @@ This creates:
   test.pt
 ```
 
-### Step 5: Train SaVeNet
+### Step 5: Run tests
+```bash
+python -m pytest tests -q
+```
 
+### Step 6: Run smoke training
 ```bash
 python train_molecule3d.py \
   --data-root /path/to/Molecule3D \
@@ -173,5 +125,22 @@ python train_molecule3d.py \
   --subset-train 32 \
   --subset-val 16 \
   --subset-test 16 \
+  --aggregation mean \
   --device cpu
+```
+
+### Step 7: Run full training
+```bash
+python train_molecule3d.py \
+  --data-root /path/to/Molecule3D \
+  --target-id 5 \
+  --split-mode random \
+  --epochs 100 \
+  --batch-size 32 \
+  --hidden-dim 128 \
+  --num-encoder 8 \
+  --num-rbf 32 \
+  --cutoff 5.0 \
+  --aggregation mean \
+  --out-dir runs/molecule3d_savenet_gap
 ```

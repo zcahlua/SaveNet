@@ -2,7 +2,7 @@ numpy
 pandas
 scipy
 tqdm
-rdkit-pypi
+rdkit
 ase
 
 # MoleculeX package. This installs the importable `molx` module.

@@ -65,7 +65,7 @@ def main():
     p.add_argument("--num-encoder", type=int, default=8)
     p.add_argument("--num-rbf", type=int, default=32)
     p.add_argument("--cutoff", type=float, default=5.0)
-    p.add_argument("--aggregation", choices=["sum", "mean"], default="sum")
+    p.add_argument("--aggregation", choices=["sum", "mean"], default="mean")
     p.add_argument("--num-workers", type=int, default=4)
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--seed", type=int, default=42)

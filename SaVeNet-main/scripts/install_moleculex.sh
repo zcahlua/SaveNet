@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 python -m pip install --upgrade pip
 
 echo "[1/3] Checking PyTorch..."
@@ -34,7 +37,7 @@ if missing:
 PY
 
 echo "[3/3] Installing MoleculeX / molx dependencies..."
-python -m pip install -r requirements-molecule3d.txt
+python -m pip install -r "${PROJECT_DIR}/requirements-molecule3d.txt"
 
 python - <<'PY'
 from molx.dataset import Molecule3DProps
