@@ -1,19 +1,17 @@
+import logging
 import math
 
 import torch
 from ase.data import atomic_masses
 
-from model.layers import BesselBasis, GaussianRBF, get_weight_init_by_string, str2act
+from .layers import BesselBasis, GaussianRBF, get_weight_init_by_string, str2act
+
+
+def get_logger(name: str) -> logging.Logger:
+    return logging.getLogger(name)
 
 
 def get_center_of_mass_torch(atomic_numbers, positions):
-    """
-    Computes center of mass.
-    Args:
-        atoms (ase.Atoms): atoms object of molecule
-    Returns:
-        center of mass
-    """
     torch_masses = torch.tensor(
         atomic_masses, device=atomic_numbers.device, dtype=torch.float32
     )
@@ -33,17 +31,6 @@ def flatten(scalar, vector):
 
 
 def _init(activation, bias_init, weight_init):
-    """
-    Initializes weights, biases and the activation function.
-
-    Args:
-    activation (str): Name of the activation function to use.
-    bias_init (str): Name of the bias initialization method to use.
-    weight_init (str): Name of the weight initialization method to use.
-
-    Returns:
-    Tuple[Callable, Callable, Callable]: Initialized activation function, bias initializer, and weight initializer.
-    """
     if type(weight_init) == str:
         weight_init = get_weight_init_by_string(weight_init)
     if type(bias_init) == str:
@@ -53,26 +40,12 @@ def _init(activation, bias_init, weight_init):
     return activation, bias_init, weight_init
 
 
-def basis(basis):
-    """
-    Determines the type of radial basis function to use.
-
-    Args:
-    basis (str): Input basis type ("BesselBasis" or "GaussianRBF").
-
-    Returns:
-    Callable: Selected basis function.
-
-    Raises:
-    ValueError: If an unknown radial basis is provided.
-    """
-    if basis == "BesselBasis":
-        basis = BesselBasis
-    elif basis == "GaussianRBF":
-        basis = GaussianRBF
-    else:
-        raise ValueError("Unknown radial basis: {}".format(basis))
-    return basis
+def basis(basis_name):
+    if basis_name == "BesselBasis":
+        return BesselBasis
+    if basis_name == "GaussianRBF":
+        return GaussianRBF
+    raise ValueError(f"Unknown radial basis: {basis_name}")
 
 
 INV_SQRT_3 = 1 / math.sqrt(3)
