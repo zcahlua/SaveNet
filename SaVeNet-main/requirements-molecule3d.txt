@@ -1,0 +1,16 @@
+numpy
+pandas
+scipy
+tqdm
+rdkit-pypi
+ase
+
+# MoleculeX package. This installs the importable `molx` module.
+moleculex==0.0.3
+
+# Install torch / PyG separately so wheels match your CUDA/Torch version:
+# torch
+# torch-geometric
+# torch-scatter
+# torch-cluster
+# torch-sparse

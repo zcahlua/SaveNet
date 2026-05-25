@@ -64,7 +64,11 @@ def load_molecule3d_datasets(root: str, target_id: int = 5, split_mode: str = "r
     try:
         from molx.dataset import Molecule3DProps
     except ImportError as exc:
-        raise ImportError("Install MoleculeX / molx; direct processed-file loading is not implemented yet.") from exc
+        raise ImportError(
+            "Cannot import molx.dataset.Molecule3DProps. "
+            "Install MoleculeX with: pip install moleculex==0.0.3 "
+            "or run: bash scripts/install_moleculex.sh"
+        ) from exc
 
     transform = Molecule3DToSaVeNet(target_id=target_id, center_positions=center_positions)
     train_dataset = Molecule3DProps(root=root, split="train", split_mode=split_mode, transform=transform, process_dir_base=process_dir_base)
