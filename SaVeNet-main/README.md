@@ -3,20 +3,50 @@
 SaVeNet here is used as a **3D molecular property prediction model** using Molecule3D ground-truth 3D coordinates (`xyz`/`pos`). This pipeline does **not** perform 2D-to-3D generation.
 
 ## Environment setup
-Install Python packages compatible with your local PyTorch/CUDA setup:
-- torch
-- torch-geometric
-- torch-scatter
-- torch-cluster
-- torch-sparse
-- rdkit
-- pandas
-- numpy
-- tqdm
-- moleculex / molx (for `Molecule3DProps`)
-- ase
 
-> Note: PyG extension wheels (`torch-scatter`, `torch-cluster`, `torch-sparse`) must match your torch/CUDA version.
+Recommended: create a dedicated conda environment.
+
+### CPU environment
+
+```bash
+cd SaVeNet-main
+bash scripts/setup_env.sh --cuda cpu
+conda activate savenet-mol3d
+```
+
+### CUDA environment
+
+Choose the CUDA tag that matches your PyTorch/CUDA setup. Examples:
+
+```bash
+cd SaVeNet-main
+bash scripts/setup_env.sh --torch 2.4.0 --cuda cu118
+conda activate savenet-mol3d
+```
+
+or:
+
+```bash
+cd SaVeNet-main
+bash scripts/setup_env.sh --torch 2.4.0 --cuda cu121
+conda activate savenet-mol3d
+```
+
+Verify the environment:
+
+```bash
+python scripts/check_env.py
+python -m compileall .
+python -m pytest tests -q
+```
+
+PyTorch Geometric wheels must match the installed PyTorch and CUDA versions. The setup script uses the official PyG wheel URL pattern:
+
+```text
+https://data.pyg.org/whl/torch-${TORCH_VERSION}+${CUDA_TAG}.html
+```
+
+MoleculeX is installed with `pip install moleculex==0.0.3`, while the Python import module is `molx`.
 
 ## Dataset layout
 Expected layout:

@@ -13,7 +13,7 @@ try:
     print("torch:", torch.__version__, "cuda:", torch.version.cuda)
 except Exception as e:
     raise SystemExit(
-        "PyTorch is not installed. Install torch first for your CUDA/CPU environment."
+        "PyTorch is not installed. Run: bash scripts/setup_env.sh --cuda cpu"
     ) from e
 PY
 
@@ -31,17 +31,13 @@ if missing:
     raise SystemExit(
         "Missing PyG packages: "
         + ", ".join(missing)
-        + "\nInstall torch-geometric / torch-scatter / torch-cluster / torch-sparse "
-          "with wheels matching your installed torch/CUDA version."
+        + "\nRun scripts/setup_env.sh, or manually install PyG packages matching your torch/CUDA version."
     )
 PY
 
 echo "[3/3] Installing MoleculeX / molx dependencies..."
 python -m pip install -r "${PROJECT_DIR}/requirements-molecule3d.txt"
 
-python - <<'PY'
-from molx.dataset import Molecule3DProps
-print("MoleculeX import OK:", Molecule3DProps)
-PY
+python "${PROJECT_DIR}/scripts/check_env.py"
 
 echo "Done."
