@@ -2,15 +2,10 @@ numpy
 pandas
 scipy
 tqdm
-rdkit
+pytest
 ase
-
-# MoleculeX package. This installs the importable `molx` module.
+rdkit-pypi
 moleculex==0.0.3
 
-# Install torch / PyG separately so wheels match your CUDA/Torch version:
-# torch
-# torch-geometric
-# torch-scatter
-# torch-cluster
-# torch-sparse
+# Install torch and PyG separately using scripts/setup_env.sh,
+# because PyG wheels must match the installed PyTorch/CUDA version.

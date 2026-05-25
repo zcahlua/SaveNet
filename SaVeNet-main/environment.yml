@@ -1,0 +1,15 @@
+name: savenet-mol3d
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - pandas
+  - scipy
+  - tqdm
+  - pytest
+  - pip:
+      - ase
+      - rdkit-pypi
+      - moleculex==0.0.3
