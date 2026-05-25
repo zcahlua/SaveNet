@@ -71,7 +71,7 @@ class SelectProperty(nn.Module):
 
 
 # @torch.jit.script
-def dist_dir(pos: Tensor, edge_index: List[Tensor]):
+def dist_dir(pos: Tensor, edge_index: Tensor):
     j, i = edge_index
 
     dist_vec = pos[i] - pos[j]
@@ -83,16 +83,19 @@ def dist_dir(pos: Tensor, edge_index: List[Tensor]):
 
 
 def get_geometry(batch, cutoff=5.0):
-    atomic_numbers, pos, batch_idx = batch.z, batch.pos, batch.batch
+    pos = batch.pos.float()
+    batch.pos = pos
+    batch_idx = batch.batch if hasattr(batch, "batch") and batch.batch is not None else torch.zeros(pos.size(0), dtype=torch.long, device=pos.device)
 
-    if "edge_index" not in batch:
+    if not hasattr(batch, "edge_index") or batch.edge_index is None:
         edge_index = radius_graph(pos, r=cutoff, loop=False, batch=batch_idx)
         batch.edge_index = edge_index
     else:
-        edge_index = batch.edge_index
+        edge_index = batch.edge_index.long()
+        batch.edge_index = edge_index
 
-    if "dir_ij" not in batch or "rij" not in batch:
-        rij, dir_ij = dist_dir(pos, edge_index=edge_index, num_nodes=pos.size(0))
+    if (not hasattr(batch, "dir_ij")) or (not hasattr(batch, "rij")) or batch.dir_ij is None or batch.rij is None:
+        rij, dir_ij = dist_dir(pos, edge_index)
         batch.rij = rij
         batch.dir_ij = dir_ij
 
