@@ -65,6 +65,7 @@ def main():
     p.add_argument("--num-encoder", type=int, default=8)
     p.add_argument("--num-rbf", type=int, default=32)
     p.add_argument("--cutoff", type=float, default=5.0)
+    p.add_argument("--aggregation", choices=["sum", "mean"], default="sum")
     p.add_argument("--num-workers", type=int, default=4)
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--seed", type=int, default=42)
@@ -92,7 +93,8 @@ def main():
     mean, std = compute_target_stats(train_ds)
 
     model = SaVeNetWrapper(hidden_dim=args.hidden_dim, num_encoder=args.num_encoder, num_rbf=args.num_rbf,
-                           cutoff=args.cutoff, target_mean=mean, target_std=std).to(args.device)
+                           cutoff=args.cutoff, target_mean=mean, target_std=std,
+                           aggregation_function=args.aggregation).to(args.device)
     opt = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scaler = torch.cuda.amp.GradScaler(enabled=args.amp and "cuda" in args.device)
 

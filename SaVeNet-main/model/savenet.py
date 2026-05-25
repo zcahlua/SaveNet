@@ -116,7 +116,8 @@ class SaVeNet(nn.Module):
 class SaVeNetWrapper(nn.Module):
     def __init__(self, hidden_dim: int = 128, num_encoder: int = 8, num_rbf: int = 20, cutoff: float = 5.0,
                  r_basis: str = "BesselBasis", activation="swish", max_z: int = 100, weight_init: str = "xavier_uniform",
-                 bias_init: str = "zeros", decoder=None, target_mean=None, target_std=None, atomref=None, vector_dropout: float = 0.0):
+                 bias_init: str = "zeros", decoder=None, target_mean=None, target_std=None, atomref=None,
+                 vector_dropout: float = 0.0, aggregation_function: str = "sum"):
         super().__init__()
         self.cutoff = cutoff
         self.encoder = SaVeNet(hidden_dim=hidden_dim, num_encoder=num_encoder, num_rbf=num_rbf, cutoff=cutoff,
@@ -125,7 +126,7 @@ class SaVeNetWrapper(nn.Module):
 
         self.decoder = decoder if decoder is not None else dec.Decoder(
             input_dims=hidden_dim, output_dims=1, num_layers=2, activation=activation, property_name="y",
-            mean=target_mean, stddev=target_std, atom_references=atomref
+            mean=target_mean, stddev=target_std, atom_references=atomref, aggregation_function=aggregation_function
         )
 
     def forward(self, batch):

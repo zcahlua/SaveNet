@@ -62,7 +62,6 @@ python train_molecule3d.py \
   --subset-train 256 \
   --subset-val 64 \
   --subset-test 64 \
-  --no-center-positions \
   --device cuda
 ```
 

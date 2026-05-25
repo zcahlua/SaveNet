@@ -85,7 +85,12 @@ def dist_dir(pos: Tensor, edge_index: Tensor):
 def get_geometry(batch, cutoff=5.0, force_radius_graph: bool = False):
     pos = batch.pos.float()
     batch.pos = pos
-    batch_idx = batch.batch if hasattr(batch, "batch") and batch.batch is not None else torch.zeros(pos.size(0), dtype=torch.long, device=pos.device)
+
+    if hasattr(batch, "batch") and batch.batch is not None:
+        batch_idx = batch.batch
+    else:
+        batch_idx = torch.zeros(pos.size(0), dtype=torch.long, device=pos.device)
+        batch.batch = batch_idx
 
     if force_radius_graph:
         if hasattr(batch, "edge_index") and batch.edge_index is not None:
@@ -99,10 +104,9 @@ def get_geometry(batch, cutoff=5.0, force_radius_graph: bool = False):
         edge_index = batch.edge_index.long()
         batch.edge_index = edge_index
 
-    if (not hasattr(batch, "dir_ij")) or (not hasattr(batch, "rij")) or batch.dir_ij is None or batch.rij is None:
-        rij, dir_ij = dist_dir(pos, edge_index)
-        batch.rij = rij
-        batch.dir_ij = dir_ij
+    rij, dir_ij = dist_dir(pos, edge_index)
+    batch.rij = rij
+    batch.dir_ij = dir_ij
 
     return batch
 

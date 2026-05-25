@@ -5,7 +5,7 @@ import torch.nn.functional as F
 import torch_scatter
 from torch import nn
 
-from .layers import Dense, MLP, NormalizedProperty, SelectProperty
+from .layers import Dense, MLP, NormalizedProperty, SelectProperty, str2act
 
 
 class EquivariantDecoderBlock(nn.Module):
@@ -34,6 +34,8 @@ class Decoder(nn.Module):
                  mean=None, stddev=None, atom_references=None, custom_decoder=None, position_contribution=False,
                  return_vector_key=None, aggregation_function: Optional[str] = "sum"):
         super().__init__()
+        if isinstance(activation, str):
+            activation = str2act(activation)
         hidden_dims = input_dims if hidden_dims is None else hidden_dims
         self.return_vector_key = return_vector_key
         self.property_name = property_name
